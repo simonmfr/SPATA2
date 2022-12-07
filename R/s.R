@@ -1032,6 +1032,7 @@ showModels <- function(input = 100,
                        model_add = NULL,
                        pretty_names = FALSE,
                        x_axis_arrow = TRUE,
+                       verbose = NULL,
                        ...){
 
   mdf <-
@@ -1039,7 +1040,8 @@ showModels <- function(input = 100,
       input = input,
       model_subset = model_subset,
       model_remove = model_remove,
-      model_add = model_add
+      model_add = model_add,
+      verbose = verbose
     ) %>%
     dplyr::rename_with(.fn = ~ stringr::str_remove(.x, "^p_")) %>%
     dplyr::mutate(x = 1:input) %>%

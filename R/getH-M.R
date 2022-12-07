@@ -138,10 +138,11 @@ getIasDf <- function(object,
                      remove_circle_bins = FALSE,
                      remove_angle_bins = FALSE,
                      rename_angle_bins = FALSE,
+                     bcsp_exclude = NULL,
                      drop = TRUE,
                      verbose = NULL,
                      ...){
-
+                     
   hlpr_assign_arguments(object)
 
   input_list <-
@@ -179,6 +180,7 @@ getIasDf <- function(object,
       binwidth = binwidth,
       n_bins_circle = max_circles,
       remove = remove_circle_bins,
+      bcsp_exclude = bcsp_exclude,
       drop = drop[1]
     ) %>%
     bin_by_angle(
@@ -1225,7 +1227,30 @@ getImageDirLowres <- function(object, fdb_fn = "warning", check = FALSE){
 #'
 getImageInfo <- function(object){
 
+#<<<<<<< dev
+#getImageAnnotationScreeningDf <- function(object,
+#                                          id,
+#                                          distance = NA_integer_,
+#                                          n_bins_circle = NA_integer_,
+#                                          binwidth = getCCD(object),
+#                                          angle_span = c(0,360),
+#                                          n_bins_angle = 1,
+#                                          variables = NULL,
+#                                          method_gs = NULL,
+#                                          summarize_by = FALSE,
+#                                          summarize_with = "mean",
+#                                          normalize_by = "sample",
+#                                          normalize = TRUE,
+#                                          remove_circle_bins = FALSE,
+#                                          remove_angle_bins = FALSE,
+#                                          rename_angle_bins = FALSE,
+#                                          bcsp_exclude=NULL,
+#                                          drop = TRUE,
+#                                          verbose = NULL,
+#                                          ...){
+#=======
   io <- getImageObject(object)
+#>>>>>>> HistologyImaging
 
   c(
     io@image_info,
@@ -1253,7 +1278,30 @@ getImageObject <- function(object){
 
     out@id <- getSampleName(object)
 
+#<<<<<<< dev
+#  ias_df <-
+#    bin_by_area(
+#      coords_df = coords_df,
+#      area_df = img_ann@area,
+#      binwidth = binwidth,
+#      n_bins_circle = max_circles,
+#      remove = remove_circle_bins,
+#      bcsp_exclude=bcsp_exclude,
+#      drop = drop[1]
+#    ) %>%
+#    bin_by_angle(
+#      center = img_ann_center,
+#      angle_span = angle_span,
+#      n_bins_angle = n_bins_angle,
+#      min_bins_circle = min_circles,
+#      rename = rename_angle_bins,
+#      remove = remove_angle_bins,
+#      drop = drop[2],
+#      verbose = verbose
+#    )
+#=======
   } else {
+#>>>>>>> HistologyImaging
 
     warning("No image object found. Returning `NULL`.")
 
