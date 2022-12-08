@@ -1,6 +1,8 @@
 # SPATA2
 A Toolbox for Spatial Gene Expression Analysis
 
+Note: This branch is a snapshot of the SPATA2 version used for the publication xyz. In addition, it contains some custom functions used for the analysis.
+
 For detailed tutorials and examples click on the link below:
 
 https://themilolab.github.io/SPATA2/
