@@ -583,7 +583,6 @@ plotIasHeatmap <- function(object,
 }
 
 #' @title Plot IAS heatmap (with merge option)
-
 #'
 #' @description Plots gene expression changes against the distance
 #' an the image annotation using a heatmap. Added functionality: Plot mean of 
