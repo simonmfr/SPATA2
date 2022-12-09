@@ -582,7 +582,7 @@ plotIasHeatmap <- function(object,
 
 }
 
-#' @title Plot IAS heatmap (with merge function)
+#' @title Plot IAS heatmap (with merge option)
 
 #'
 #' @description Plots gene expression changes against the distance
@@ -626,7 +626,7 @@ plotIasHeatmap_merge <- function(object,
                            verbose = NULL,
                            merge_ias=FALSE,                                   ###### --- novel
                            id2=NA_integer_ # must have same parameters!       ###### --- novel
-                           #...
+                           ...
                            ){
 
   hlpr_assign_arguments(object)
