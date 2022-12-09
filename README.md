@@ -1,7 +1,11 @@
 # SPATA2
-A Toolbox for Spatial Gene Expression Analysis
+Note: This branch is a snapshot of the SPATA2 version used for the publication from Koupourtidou et al. It additionally contains some custom functions used for the analysis.
 
-Note: This branch is a snapshot of the SPATA2 version used for the publication xyz. In addition, it contains some custom functions used for the analysis.
+Install via
+```
+devtools::install_github("simonmfr/SPATA2@publicationCK",force=T)
+devtools::install_github("simonmfr/confuns@publicationCK",force=T)
+```
 
 SPATA citation:
 Inferring spatially transient gene expression pattern from spatial transcriptomic studies,
