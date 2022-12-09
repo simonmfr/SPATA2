@@ -626,8 +626,7 @@ plotIasHeatmap_merge <- function(object,
                            verbose = NULL,
                            merge_ias=FALSE,                                   ###### --- novel
                            id2=NA_integer_ # must have same parameters!       ###### --- novel
-                           ...
-                           ){
+                           ...){
 
   hlpr_assign_arguments(object)
 
