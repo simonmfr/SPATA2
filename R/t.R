@@ -873,7 +873,7 @@ transformSeuratToSpata <- function(seurat_object,
 
     if(!base::is.null(image_object)){
 
-      image_object <- asHistologyImage(object = image_object)
+      image_object <- asHistologyImaging(object = image_object) ###
 
       coords_df <- image_object@coordinates
 
