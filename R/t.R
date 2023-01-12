@@ -633,7 +633,8 @@ transformSeuratToSpata <- function(seurat_object,
                                    assay_slot = NULL,
                                    image_name = NULL,
                                    gene_set_path = NULL,
-                                   verbose = TRUE){
+                                   verbose = TRUE,
+                                   id='imageid'){
 
   # 0. Set up empty spata-object --------------------------------------------
 
@@ -873,7 +874,7 @@ transformSeuratToSpata <- function(seurat_object,
 
     if(!base::is.null(image_object)){
 
-      image_object <- asHistologyImaging(object = image_object) ###
+      image_object <- asHistologyImaging(object = image_object, id=id) ###
 
       coords_df <- image_object@coordinates
 
