@@ -31,10 +31,10 @@ getImageAnnotationCenter(...)
 
 \item{id}{Character value. The ID of the image annotation of interest.}
 
-\item{outer}{Logical value. If \code{FALSE}, the outer border of the image annotation
+\item{outer}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the outer border of the image annotation
 is not included in the output.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 }
 \value{

@@ -20,7 +20,7 @@ getIasDf(
   summarize_by = FALSE,
   summarize_with = "mean",
   normalize_by = "sample",
-  normalize = TRUE,
+  normalize = FALSE,
   remove_circle_bins = FALSE,
   remove_angle_bins = FALSE,
   rename_angle_bins = FALSE,
@@ -59,10 +59,10 @@ an angle span relative to the center of the image annotation.
 \item{n_bins_angle}{Numeric value. Number of bins that are created by angle.
 (See details for more.)}
 
-\item{outer}{Logical value. If \code{FALSE}, the outer border of the image annotation
+\item{outer}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the outer border of the image annotation
 is not included in the output.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 
 \item{variables}{Character vector. All numeric variables (meaning genes,

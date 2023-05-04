@@ -34,10 +34,10 @@ selection. See section \emph{Selection of image annotation with tags} for more i
 \emph{none}. Specifies how input for \code{tags} is used to select image annotations.
 See section \emph{Selection of image annotation with tags} for more information.}
 
-\item{outer}{Logical value. If \code{FALSE}, the outer border of the image annotation
+\item{outer}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the outer border of the image annotation
 is not included in the output.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 
 \item{...}{Used to absorb deprecated arguments or functions.}

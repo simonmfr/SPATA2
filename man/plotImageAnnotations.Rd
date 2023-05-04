@@ -65,7 +65,7 @@ Processing of the image output depending on argument \code{expand} happens after
 \item{encircle}{Logical value. If TRUE, a polygon is drawn around the
 exact extent of the annotated structure encircled drawn in \code{createImageAnnotations()}.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 
 \item{unit}{Character value. The unit in which the x- and y-axis text

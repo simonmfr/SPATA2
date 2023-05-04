@@ -55,22 +55,10 @@ from the object's gene set data.frame.}
 \emph{none}. Specifies how input for \code{tags} is used to select image annotations.
 See section \emph{Selection of image annotation with tags} for more information.}
 
-\item{background}{Size or character vector of background population genes}
-
-\item{absolute}{Takes max-min score rather than the max deviation from null (kstest only)}
-
-\item{power}{Exponent for weights (kstest only)}
-
-\item{pval}{Filter results to be less than pval cutoff}
-
-\item{fdr}{Filter results to be less than fdr cutoff}
-
 \item{reduce}{Logical value. If set to TRUE (the default) the return value
 of \code{hypeR::hypeR()} is reduced to what is necessary for \code{SPATA2}s
 function to work. If FALSE, the complete objects are stored. This will
 grow the spata-objects size quickly!}
-
-\item{quiet}{Use true to suppress logs and warnings}
 
 \item{verbose}{Logical. If set to TRUE informative messages regarding
 the computational progress will be printed.

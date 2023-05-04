@@ -9,6 +9,7 @@ ggpLayerEncirclingGroups(
   plot_type = "coords",
   grouping_variable,
   groups_subset = NULL,
+  bcsp_rm = NULL,
   ...
 )
 }
@@ -23,6 +24,9 @@ ggpLayerEncirclingGroups(
 \item{groups_subset}{Character value or NULL. If character,
 specifies the exact groups that are encircled. If NULL, all groups
 are encircled.}
+
+\item{bcsp_rm}{Character vector or NULL. If character, specifies barcode-spots that
+are removed before plotting.}
 
 \item{...}{Additional arguments given to \code{ggforce::geom_mark_hull()}. Affects
 the encircling.}

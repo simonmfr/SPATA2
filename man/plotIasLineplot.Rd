@@ -37,12 +37,6 @@ plotIasLineplot(
   border_linecolor = "black",
   border_linesize = 1,
   border_linetype = "dashed",
-  display_ribbon = TRUE,
-  ribbon_alpha = 0.5,
-  ribbon_color = "lightgrey",
-  display_error_bar = FALSE,
-  sd_alpha = 0.9,
-  sd_color = "black",
   x_nth = 3,
   xi = NULL,
   yi = NULL,
@@ -81,10 +75,10 @@ an angle span relative to the center of the image annotation.
 \item{n_bins_angle}{Numeric value. Number of bins that are created by angle.
 (See details for more.)}
 
-\item{outer}{Logical value. If \code{FALSE}, the outer border of the image annotation
+\item{outer}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the outer border of the image annotation
 is not included in the output.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 
 \item{method_gs}{Character value. The method according to which gene sets will
@@ -138,9 +132,6 @@ to highlight where the border of the image annotation runs.}
 \item{border_linealpha, border_linecolor, border_linesize, border_linetype}{Given
 to \code{ggplot2::geom_vline()}. Adjusts appearance of the vertical line that
 represents the border of the image annotation.}
-
-\item{display_ribbon}{Logical value. If TRUE, a ribbon is displayed around
-the main line of the plot visualizing uncertainty using standard deviation.}
 
 \item{x_nth}{Numeric value. If the number of breaks/labels on the
 x-axis becomes too high \code{x_nth} can be used to reduce it. If \code{x_nth} is 1,

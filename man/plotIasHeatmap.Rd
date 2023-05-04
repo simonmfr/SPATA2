@@ -60,10 +60,10 @@ information about distance values.}
 an angle span relative to the center of the image annotation.
 (See details fore more.)}
 
-\item{outer}{Logical value. If \code{FALSE}, the outer border of the image annotation
+\item{outer}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the outer border of the image annotation
 is not included in the output.}
 
-\item{inner}{Logical value. If \code{FALSE}, the inner borders of the image annotation
+\item{inner}{Logical value. Only applies if an image annotation contains a secondary image annotation within its own area. If \code{FALSE}, the inner borders of the image annotation
 are not included in the output.}
 
 \item{arrange_rows}{Alter the way the rows of the heatmap
