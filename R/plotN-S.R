@@ -1369,6 +1369,7 @@ plotSasLineplot <- function(object,
                             smooth_span = 0.2,
                             smooth_se = TRUE,
                             unit = getSpatialMethod(object)@unit,
+                            split = "facet",
                             clrp = NULL,
                             clrp_adjust = NULL,
                             line_color = "black",
@@ -1381,6 +1382,11 @@ plotSasLineplot <- function(object,
                             border_linetype = "dashed",
                             ggpLayers = list(),
                             verbose = NULL){
+
+  
+  if (!(split %in% c("facet", "merged"))) {
+    stop("Invalid value for 'split'. Use either 'facet' or 'merged'.")
+  }
 
   # prepare sas df
   variables <- base::unique(variables)
@@ -1418,6 +1424,8 @@ plotSasLineplot <- function(object,
 
   # make plot add ons
 
+  if (split ==  "facet"){
+
   # facets
   if(n_bins_angle > 1){
 
@@ -1432,6 +1440,10 @@ plotSasLineplot <- function(object,
     facet_add_on <-
       ggplot2::facet_wrap(facets = . ~ variables, nrow = nrow, ncol = ncol)
 
+  }
+  } else {
+
+    facet_add_on <- NULL
   }
 
   # border
@@ -1488,6 +1500,139 @@ plotSasLineplot <- function(object,
     legendNone()
 
 }
+
+plotSasLineplotSF <- function(object,
+                            variables,
+                            id = idSA(object),
+                            distance = distToEdge(object, id),
+                            binwidth = recBinwidth(object),
+                            core = TRUE,
+                            n_bins_dist = NA_integer_,
+                            angle_span = c(0, 360),
+                            n_bins_angle = 1,
+                            smooth_span = 0.2,
+                            smooth_se = TRUE,
+                            unit = getSpatialMethod(object)@unit,
+                            split = "facet",
+                            clrp = NULL,
+                            clrp_adjust = NULL,
+                            line_color = "black",
+                            line_size = 1.5,
+                            nrow = NULL,
+                            ncol = NULL,
+                            border_linealpha = 0.75,
+                            border_linecolor = "black",
+                            border_linesize = 1,
+                            border_linetype = "dashed",
+                            ggpLayers = list(),
+                            verbose = NULL){
+
+  if (!(split %in% c("facet", "merged"))) {
+    stop("Invalid value for 'split'. Use either 'facet' or 'merged'.")
+  }
+
+  # prepare sas df
+  variables <- base::unique(variables)
+
+  sas_df <-
+    getSasDf(
+      object = object,
+      id = id,
+      distance = distance,
+      n_bins_dist = n_bins_dist,
+      binwidth = binwidth,
+      angle_span = angle_span,
+      n_bins_angle = n_bins_angle,
+      variables = variables,
+      core = core,
+      verbose = FALSE
+    ) %>%
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(variables),
+      names_to = "variables",
+      values_to = "values"
+    ) %>%
+    dplyr::mutate(variables = base::factor(variables, levels = {{variables}}))
+
+  if(unit != "px"){
+    scale_fct <- getPixelScaleFactor(object, unit = unit)
+    sas_df[["dist"]] <- sas_df[["dist"]] * scale_fct
+  } else {
+    unit <- "px"
+  }
+
+  # Check for NaN values in the data
+  if (any(is.nan(sas_df$values))) {
+    warning("NaN values were found in the 'values' column of the data. These values will be removed.")
+    sas_df <- sas_df[!is.nan(sas_df$values), ]
+  }
+
+  # Check for NaN or Inf values in 'smooth_span'
+  if (is.na(smooth_span) || is.infinite(smooth_span) || smooth_span <= 0) {
+    warning("Invalid 'smooth_span' value. Setting it to 0.2.")
+    smooth_span <- 0.2
+  }
+
+  # Border
+  border_add_on <-
+    ggplot2::geom_vline(
+      xintercept = 0,
+      alpha = border_linealpha,
+      color = border_linecolor,
+      size = border_linesize,
+      linetype = border_linetype
+    )
+
+  # Plot
+  breaks_x <-
+    base::seq(from = 0, to = base::max(sas_df$dist), length.out = 5) %>%
+    base::ceiling()
+
+  p <- ggplot2::ggplot(data = sas_df, mapping = ggplot2::aes(x = dist, y = values)) +
+    ggpLayers +
+    ggplot2::geom_smooth(
+      data = sas_df,
+      mapping = ggplot2::aes(x = dist, y = values, color = variables),
+      span = smooth_span,
+      se = smooth_se,
+      size = line_size,
+      method = "loess",
+      formula = y ~ x
+    ) +
+    border_add_on +
+    ggplot2::scale_x_continuous(
+      breaks = breaks_x,
+      labels = base::as.character(breaks_x)
+    ) +
+    ggplot2::scale_y_continuous(
+      breaks = base::seq(0, 1, 0.2),
+      labels = base::seq(0, 1, 0.2),
+    ) +
+    ggplot2::coord_cartesian(
+      xlim = base::range(sas_df[["dist"]]) * 1.025,
+      ylim = c(-0.025, 1.025),
+      expand = FALSE
+    ) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      axis.line.x = ggplot2::element_line(),
+      axis.line.y = ggplot2::element_line(),
+      strip.background = ggplot2::element_blank()
+    ) +
+    ggplot2::labs(
+      x = glue::glue("Distance to Annotation [{unit}]"),
+      y = "Expression"
+    )
+
+  if (split == "merged") {
+    p <- p + facet_null()
+  } else {
+    p <- p + facet_add_on
+  }
+
+  return(p)
+}
+
 
 
 #' @rdname plotSasLineplot
@@ -1872,10 +2017,12 @@ plotSasLineplotSC <- function(object,
 }
 
 
+
+
 #' @title Plot SAS rideplot
 #'
 #' @description Plots gene expression changes against the distance to
-#' to the spatial annotation using the desing of ridgeplots.
+#' to the spatial annotation using the design of ridgeplots.
 #'
 #' @param scale Logical value. If `TRUE`, density of cell types is scaled
 #' to make them comparable. Else, the absolute values defined by count/`unit`^2
