@@ -2289,6 +2289,7 @@ spatial_gradient_screening <- function(coords_df,
         # compute p-value
         observed_tv <- compute_total_variation(inf_df$inf_gradient)
         observed_rv <- compute_relative_variation(inf_df$inf_gradient)
+        net_change <- dplyr::slice_max(inf_df, expr_est_idx)$inf_gradient - dplyr::slice_min(inf_df, expr_est_idx)$inf_gradient
 
         p_value <-
           base::sum(random_tv <= observed_tv) / base::length(random_tv)
@@ -2299,6 +2300,7 @@ spatial_gradient_screening <- function(coords_df,
             rel_var = observed_rv,
             tot_var = observed_tv,
             norm_var = observed_tv/base::length(expr_est_pos),
+            net_change = net_change,
             p_value = p_value
           )
 
@@ -2353,7 +2355,7 @@ spatial_gradient_screening <- function(coords_df,
 
   n_vars <- base::length(variables_for_step3)
 
-  if(n_vars != 0 & !base::isFALSE(skip_comp)){
+  if(n_vars != 0 & base::isFALSE(skip_comp)){
 
     confuns::give_feedback(
       msg = glue::glue("Step 3: Comparing {n_vars} variables against {nm} models."),
