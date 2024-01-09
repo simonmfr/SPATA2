@@ -371,12 +371,22 @@ initiateSpataObjectMERFISH <- function(directory_merfish,
   pxl_scale_fct <- magrittr::set_attr(x = 1, which = "unit", value = "um/px")
   object <- setScaleFactor(object, fct_name = "pixel", value = pxl_scale_fct)
 
+#  object <-
+#    setCaptureArea(
+#      object = object,
+#      x = getCoordsRange(object)$x %>% round_range() %>% as_millimeter(object = object),
+#      y = getCoordsRange(object)$y %>% round_range() %>% as_millimeter(object = object)
+#    )
+
+  base::options(scipen = 999)
+
   object <-
     setCaptureArea(
       object = object,
-      x = getCoordsRange(object)$x %>% round_range() %>% as_millimeter(object = object),
-      y = getCoordsRange(object)$y %>% round_range() %>% as_millimeter(object = object)
+      x = getCoordsRange(object)$x %>% as_millimeter(object = object),
+      y = getCoordsRange(object)$y %>% as_millimeter(object = object)
     )
+
 
   confuns::give_feedback(
     msg = "Estimated field of view range based on cell coordinates. Specify with `setCaptureaArea()`.",

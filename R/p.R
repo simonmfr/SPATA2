@@ -1076,6 +1076,74 @@ process_seurat_object <- function(seurat_object,
 
 }
 
+#' @title Wrapper around Seurat processing functions
+#'
+#' @inherit argument_dummy params
+#' @inherit transformSpataToSeurat params
+#' @param seurat_object A valid seurat-object.
+#'
+#'
+#' @return A processed seurat-object.
+#'
+#' @keywords internal
+process_seurat_object_MERFISH <- function(seurat_object,
+                                  assay_name = NULL,
+                                  calculate_rb_and_mt = TRUE,
+                                  RunPCA = RunPCA,
+                                  FindClusters = FindClusters,
+                                  verbose = verbose){
+
+  # 1. Control --------------------------------------------------------------
+
+  base::stopifnot(methods::is(object = seurat_object, class2 = "Seurat"))
+
+  confuns::is_value(x = assay_name, mode = "character", skip.allow = TRUE, skip.val = NULL)
+
+  if(base::is.null(assay_name)){
+
+    assay_name <- base::names(seurat_object@assays)
+
+    if(base::length(assay_name) != 1){
+
+      msg <- glue::glue("Found more than one assay in provided seurat-object. Please specify one of the options '{ref_assays}' using argument 'assay_name'.",
+                        ref_assays = glue::glue_collapse(x = assay_name, sep = "', '", last = "' or '"))
+
+      confuns::give_feedback(msg = msg, fdb.fn = "stop")
+
+    }
+
+  }
+
+  # calculate ribosomal and mitochondrial percentage
+  if(base::isTRUE(calculate_rb_and_mt)){
+
+    msg <- "Calculating percentage of ribosomal and mitochondrial genes."
+
+    confuns::give_feedback(msg = msg, verbose = verbose)
+
+    seurat_object[["percent.mt"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^MT.")
+    seurat_object[["percent.RB"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^RPS")
+
+  }
+
+  # 2. Process seurat object ------------------------------------------------
+
+  seurat_object <- Seurat::SCTransform(seurat_object, assay = "RNA", clip.range = c(-10, 10), verbose = verbose)
+  
+  if(!base::isFALSE(RunPCA)){
+    seurat_object <- Seurat::RunPCA(seurat_object, npcs = 30, features = rownames(seurat_object), verbose = verbose)
+  }
+  if(!base::isFALSE(FindClusters)){
+    seurat_object <- Seurat::RunUMAP(seurat_object, dims = 1:30, verbose = FALSE)
+    seurat_object <- Seurat::FindNeighbors(seurat_object, reduction = "pca", dims = 1:30, verbose = verbose)
+    seurat_object <- Seurat::FindClusters(seurat_object, resolution = 0.3, verbose = verbose)
+    seurat_object <- Seurat::ScaleData(seurat_object)
+  }
+
+  base::return(seurat_object)
+
+}
+
 
 
 #' @title Process `spata2` object using `Seurat`
@@ -1238,6 +1306,108 @@ processWithSCT <- function(object,
   return(object)
 
 }
+
+
+
+#' @title Process `spata2` object using Seurat's MERFISH pipeline
+#'
+#' @description A wrapper around the most essential processing functions
+#' of the `Seurat` package for MERFISH data. A temporary `Seurat` object is created using the
+#' data from the `spata2` object and is processed. Then the processed
+#' data is transferred back to the `spata2` object.
+#'
+#' @inherit process_seurat_object params
+#' @inherit argument_dummy params
+#'
+#' @details By default this function computes a normalized, scaled data which
+#' is added to the processed matrices under the name *scaled*.
+#'
+#' @inherit update_dummy return
+#'
+#' @export
+#'
+processWithSeuratMERFISH <- function(object,
+                              overwrite = FALSE,
+                              ScaleData = TRUE,
+                              RunPCA = TRUE,
+                              FindClusters = TRUE,
+                              verbose = TRUE){
+
+  seurat_object <-
+    Seurat::CreateSeuratObject(
+      counts = getCountMatrix(object),
+      assay = "RNA"
+    )
+
+  seurat_object <-
+    process_seurat_object_MERFISH(
+      seurat_object = seurat_object,
+      calculate_rb_and_mt = TRUE,
+      RunPCA = RunPCA,
+      FindClusters = FindClusters,
+      verbose = verbose
+    )
+
+
+  if(!base::isFALSE(ScaleData)){
+
+    # scaled matrix
+    object <-
+      setProcessedMatrix(
+        object = object,
+        proc_mtr = seurat_object@assays[["SCT"]]@scale.data,
+        name = "scaled"
+      )
+
+    object <- setActiveMatrix(object, mtr_name = "scaled")
+
+  }
+
+  if(!base::isFALSE(RunPCA)){
+
+    # principal components
+    pca_df <-
+      seurat_object@reductions$pca@cell.embeddings %>%
+      base::as.data.frame() %>%
+      tibble::rownames_to_column(var = "barcodes") %>%
+      tibble::as_tibble() %>%
+      dplyr::rename_with(.fn = ~ stringr::str_remove(.x, pattern = "_"))
+
+    object <- setPcaDf(object, pca_df = pca_df)
+
+  }
+
+  if(!base::isFALSE(FindClusters)){
+
+    # clusters and
+    meta_df <-
+      tibble::rownames_to_column(.data = seurat_object@meta.data, "barcodes")
+
+    if(base::isFALSE(overwrite)){
+
+      meta_df <-
+        dplyr::select(
+          .data = meta_df,
+          barcodes,
+          dplyr::everything(),
+          -dplyr::any_of(x = getFeatureNames(object))
+        )
+
+    }
+
+    if(base::ncol(meta_df) > 1){
+
+      object <-
+        addFeatures(object = object, feature_df = meta_df, overwrite = TRUE)
+
+    }
+
+  }
+
+  return(object)
+
+}
+
 
 # project -----------------------------------------------------------------
 
