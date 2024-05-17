@@ -2275,7 +2275,6 @@ setMethod(
   }
 )
 
-#' @importFrom anndata AnnDataR6
 #' @rdname asSPATA2
 #' @export
 setMethod(
