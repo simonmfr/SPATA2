@@ -1284,11 +1284,11 @@ setMethod(
   signature = "SPATA2",
   definition = function(object,
                         method,
-                        minPts = recDbscanMinPts(object),
-                        eps = recDbscanEps(object),
                         img_name = activeImage(object),
-                        verbose = NULL,
-                        ...){
+                        eps = recDbscanEps(object),
+                        minPts = recDbscanMinPts(object),
+                        concavity = 2,
+                        verbose = NULL){
 
     hlpr_assign_arguments(object)
 
@@ -1301,8 +1301,10 @@ setMethod(
         minPts = minPts,
         eps = eps,
         img_name = img_name,
-        verbose = verbose,
-        ...
+        eps = eps,
+        minPts = minPts,
+        concavity = concavity,
+        verbose = verbose
         )
 
     object <- setSpatialData(object, sp_data = sp_data)
@@ -1320,10 +1322,10 @@ setMethod(
   definition = function(object,
                         method,
                         img_name = activeImage(object),
-                        minPts = recDbscanMinPts(object),
                         eps = recDbscanEps(object),
-                        verbose = TRUE,
-                        ...){
+                        minPts = recDbscanMinPts(object),
+                        concavity = 2,
+                        verbose = TRUE){
 
     confuns::check_one_of(
       input = method,
@@ -1368,7 +1370,7 @@ setMethod(
       # for complete tissue
       object@outline[["tissue_whole"]] <-
         getCoordsMtr(object, orig = TRUE) %>%
-        concaveman::concaveman(points = ., concavity = 2) %>%
+        concaveman::concaveman(points = ., concavity = concavity) %>%
         tibble::as_tibble() %>%
         magrittr::set_colnames(value = c("x_orig", "y_orig"))
 
@@ -1376,7 +1378,7 @@ setMethod(
       coords_df <-
         getCoordsDf(object) %>%
         add_dbscan_variable(
-          eps = eps,
+          eps = as_pixel(input = eps, object),
           minPts = minPts,
           name = "section"
         ) %>%
@@ -1392,7 +1394,7 @@ setMethod(
               dplyr::select(x = x_orig, y = y_orig) %>%
               #increase_n_data_points(fct = 10, cvars = c("x", "y")) %>%
               base::as.matrix() %>%
-              concaveman::concaveman(concavity = 2) %>%
+              concaveman::concaveman(concavity = concavity) %>%
               tibble::as_tibble() %>%
               magrittr::set_colnames(value = c("x_orig", "y_orig")) %>%
               dplyr::mutate(section = {{section}}) %>%

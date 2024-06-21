@@ -296,9 +296,9 @@ recDbscanMinPts <- function(object){
 
   } else {
 
-    warning("Recommendation might be suboptimal.")
+    out <- 25
 
-    out <- 12
+    warning(paste0("minPts is set to ", out, ". May require adjustments for optimal performance."))
 
   }
 
