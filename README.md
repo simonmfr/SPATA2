@@ -1,5 +1,5 @@
 # SPATA2
-Note: This branch is a snapshot of the SPATA2 version used for the publication from Koupourtidou et al. It additionally contains some custom functions used for the analysis.
+Note: This branch is a snapshot of the SPATA2 version used for the publication from [Koupourtidou et al.](https://www.nature.com/articles/s41467-024-46625-w) In addition to the main version, it contains some custom functions used for the analysis.
 
 Install via
 ```
