@@ -8,9 +8,7 @@ devtools::install_github("simonmfr/confuns@publicationCK",force=T)
 ```
 
 SPATA citation:
-Inferring spatially transient gene expression pattern from spatial transcriptomic studies,
-Jan Kueckelhaus, Jasmin von Ehr, Vidhya M. Ravi, Paulina Will, Kevin Joseph, Juergen Beck, Ulrich G. Hofmann, Daniel Delev, Oliver Schnell, Dieter Henrik Heiland
-doi: https://doi.org/10.1101/2020.10.20.346544
+If you have used SPATA2 for your analysis, please consider citing: [Kueckelhaus J.\*, Frerich S.\* et al. (2024). *Nat Commun*, 15, 7280.](https://doi.org/10.1038/s41467-024-50904-x)
 
 
 
